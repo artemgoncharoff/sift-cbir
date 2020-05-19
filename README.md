@@ -1,9 +1,9 @@
 # Photologue app powered by CBIR library
 
-<img src="https://raw.githubusercontent.com/gavr97/cbir-django/master/screens/demo.gif" alt="Demonstration" width="700">
 
 
-## Project structure overview
+
+## Структура проекта
 - `cbir_main` - entrypoint to `cbir`'s commands
 - `cbir` - module providing core class `CBIRCore` to manage indexes.
 - `cbir_evaluation` - scripts for evalution of algortithms of Oxford Paris datasets.
@@ -13,7 +13,7 @@
 - `photologue` - django project's app
 
 
-## Setup
+## Установка и настройка виртуального окружения
 ```
 pipenv shell
 pipenv install
@@ -22,14 +22,12 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-## Run
-Run cbir server
-`python cbir_main.py --log_prefix logs/server run_server --port 8701`
-
-Run django app
-`python manage.py runserver`
-
-## Reload: clean data and migrations
+## Запуска бэкенда и фортенда
+```
+python cbir_main.py --log_prefix logs/server run_server --port 8701
+python manage.py runserver
+```
+## Перезагрузка: Очистка от предыдущих файлов
 ```
 yes | rm db.sqlite3;
     rm -rf photologue/migrations/*; touch photologue/migrations/__init__.py && \
