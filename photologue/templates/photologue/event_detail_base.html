@@ -1,0 +1,49 @@
+{% extends "photologue/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+
+<div class="row col-lg-12">
+    <h1 class="page-header">{{ event.title }}</h1>
+    <p class="muted">
+        <small>{% trans "Published" %} {{ event.date_added }}</small>
+    </p>
+
+    {% if warning_message %}
+    <h4> {{ warning_message }}</h4>
+    {% endif %}
+
+    <h4>Status</h4>
+    <p style="text-indent: 3%">{{event.status|upper}}</p>
+
+    {% if event.description %}
+    <h4>Description</h4>
+    <p style="text-indent: 3%">{{ event.description|safe }}</p>
+    {% endif %}
+
+    <h4>Query photos</h4>
+    <ul>
+        {% if query_photos %}
+        {% for query in query_photos %}
+        <li>
+            <a href="{{ query.database_photo.get_absolute_url }}">
+                <p>{{ query }}</p>
+            </a>
+            Description: {% if query.description %} {{ query.description|safe }}{% else %}--{% endif %}
+            <br>
+            <img src="{{ query.get_display_url }}" class="thumbnail" alt="{{ query.title }}">
+        </li>
+        {% endfor %}
+        {% else %}
+        No query photos
+        {% endif %}
+    </ul>
+
+    {% block event_detail_content %}
+    {% endblock %}
+
+</div>
+
+{% endblock %}

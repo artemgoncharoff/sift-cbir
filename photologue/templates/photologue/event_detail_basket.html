@@ -1,0 +1,129 @@
+{% extends "photologue/event_detail_base.html" %}
+{% load i18n %}
+
+{% block event_detail_content %}
+
+<hr width="100%" style="height:5px; background-color:black;">
+
+
+
+<script language="JavaScript">
+function toggleCurrentPage(source) {
+  checkboxes = document.getElementsByName('chosen_photo');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
+
+<h3>Найденные картинки:</h3>
+<ul>
+    <form method="post" action="" name="do">
+        {% csrf_token %}
+        <input type="submit" value="Добавить"><br>
+        Действие:<br>
+        <select name="do">
+            <option value="add">Add</option>
+        </select>
+        <br><br>
+        <input type="checkbox" onClick="toggleCurrentPage(this)" name="toggle_all" /> Переключить со всех страниц<br/>
+        <input type="checkbox" onClick="toggleCurrentPage(this)" /> Переключить с текущей страницы<br/>
+        <div class="row col-lg-12">
+        {% for photo in found_photos_to_give %}
+            <div class="col-sm-2">
+                <input type="checkbox" value="{{photo.database_photo.id}}" name="chosen_photo">
+                <br>
+            <a href="{{ photo.database_photo.get_absolute_url }}">
+                <img src="{{ photo.database_photo.get_thumbnail_url }}" class="thumbnail" alt="{{ photo.database_photo.title }}">
+            </a>
+            </div>
+        {% endfor %}
+        </div>
+
+        {% for photo in result_photos_to_give %}
+            <input type="checkbox" value="{{photo.database_photo.id}}" name="chosen_photo">
+            <a href="{{ photo.database_photo.get_absolute_url }}">
+                <img src="{{ photo.database_photo.get_thumbnail_url }}" class="thumbnail" alt="{{ photo.database_photo.title }}">
+            </a>
+        {% endfor %}
+
+
+        <br>
+    </form>
+
+    {% if found_photos_to_give.has_other_pages %}
+  <ul class="pagination">
+    {% if found_photos_to_give.has_previous %}
+      <li><a href="?page={{ found_photos_to_give.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in found_photos_to_give.paginator.page_range %}
+      {% if found_photos_to_give.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if found_photos_to_give.has_next %}
+      <li><a href="?page={{ found_photos_to_give.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+    {% endif %}
+
+</ul>
+
+<hr width="100%" style="height:5px; background-color:black;">
+
+<h3>Выбранные фото:</h3>
+<ul>
+    <form method="post" action="" name="commit">
+        {% csrf_token %}
+        <input type="submit" value="фиксировать"><br>
+        <input type="hidden" name="do" value="фиксировать"><br>
+        <div class="row col-lg-12">
+        {% for photo in chosen_photos_to_give %}
+            <div class="col-sm-2">
+                <input type="text" name="description" value="{{photo.description}}">
+                <br>
+                <a href="{{ photo.database_photo.get_absolute_url }}">
+                <img src="{{ photo.database_photo.get_thumbnail_url }}" class="thumbnail" alt="{{ photo.database_photo.title }}">
+                </a>
+            </div>
+        {% endfor %}
+        </div>
+    </form>
+
+    {% if chosen_photos_to_give.has_other_pages %}
+  <ul class="pagination">
+    {% if chosen_photos_to_give.has_previous %}
+      <li><a href="?page={{ chosen_photos_to_give.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in chosen_photos_to_give.paginator.page_range %}
+      {% if chosen_photos_to_give.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if chosen_photos_to_give.has_next %}
+      <li><a href="?page={{ chosen_photos_to_give.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+    {% endif %}
+
+</ul>
+
+<div><a href="{% url 'photologue:database_detail' event.database.slug %}"
+        class="btn btn-default">
+    Database {{event.database}}
+</a>
+</div>
+
+{% endblock %}

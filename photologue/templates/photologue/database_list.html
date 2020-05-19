@@ -1,0 +1,50 @@
+{% extends "photologue/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Базы данных" %}{% endblock %}
+
+{% block content %}
+
+<div class="row col-lg-12">
+    <h1 class="page-header">{% trans "Базы данных" %}</h1>
+</div>
+
+<h4>
+    <a href="{% url 'photologue:database_create' %}">
+        Создать новую базу данных
+    </a>
+</h4>
+
+{% if object_list %}
+{% for database in object_list %}
+<div class="row col-lg-12">
+    <h2><a href="{{ database.get_absolute_url }}">{{ database.title }}</a></h2>
+    <p class="muted">
+        <small>{% trans "Создано" %} {{ database.date_added }}</small>
+    </p>
+    {% if database.description %}
+    <h4>Описание</h4>
+    <p style="text-indent: 3%">{{ database.description|safe }}</p>
+    {% endif %}
+
+    <h4>События</h4>
+    <ul>
+        {% if database.get_events %}
+        {% for event in database.get_events %}
+        <li>
+            <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+        </li>
+        {% endfor %}
+        {% else %}
+        --
+        {% endif %}
+
+    </ul>
+</div>
+{% endfor %}
+{% else %}
+<div class="row col-lg-12">{% trans "No databases yet" %}.</div>
+{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "photologue/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ database.title }}{% endblock %}
+
+{% block content %}
+
+<div class="row col-lg-12">
+    <h2 class="page-header">{{ database.title }}</h2>
+    <p class="muted">
+        <small>{% trans "Создано" %} {{ database.date_added }}</small>
+    </p>
+    <h4>Создано</h4>
+    <p style="text-indent: 3%">
+        {% if database.description %}
+        {{ database.description }}
+        {% else %}
+        --
+        {% endif %}
+    </p>
+
+    <h4>Всего фото</h4>
+    <p style="text-indent: 3%">{{database.count}}
+
+    <h4>Используемый индекс</h4>
+    <p style="text-indent: 3%">
+        {% if database.cbir_index_default %}
+        <a href="{% url 'photologue:database_index_detail' database.cbir_index_default.slug %}">
+        {{database.cbir_index_default}}
+        </a>
+        {% else %}
+        --
+        {% endif %}
+    </p>
+
+    <h4>
+        <a href="{% url 'photologue:database_edit' database.slug %}">
+            Изменить базу данных
+        </a>
+    </h4>
+
+    <h4>
+        <a href="{% url 'photologue:database_index_create'%}?database={{ database.slug }}">
+            Cоздать новый индекс для базы данных
+        </a>
+    </h4>
+
+    <h4>
+        <a href="{% url 'photologue:database_index_info'%}?database={{ database.slug }}">
+            Информация об индексе
+        </a>
+    </h4>
+
+    <h4>
+        <a href="{% url 'photologue:event_create' %}?database={{database.slug}}">
+            Создать новое событие
+        </a>
+    </h4>
+
+    <h4>События</h4>
+    <ul>
+        {% if events %}
+        {% for event in events %}
+        <li>
+            <a href="{{ event.get_absolute_url }}">
+                {{ event.title }}
+            </a>
+        </li>
+
+        {% endfor %}
+        {% else %}
+        --
+        {% endif %}
+    </ul>
+
+    <h4>Фото</h4>
+    <ul>
+        <div class="row col-lg-12">
+        {% for photo in photos_to_give %}
+            <a href="{{ photo.get_absolute_url }}">
+                <img src="{{ photo.get_thumbnail_url }}" class="thumbnail" alt="{{ photo.title }}">
+            </a>
+        {% endfor %}
+        </div>
+
+        {% if photos_to_give.has_other_pages %}
+  <ul class="pagination">
+    {% if photos_to_give.has_previous %}
+      <li><a href="?page={{ photos_to_give.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in photos_to_give.paginator.page_range %}
+      {% if photos_to_give.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if photos_to_give.has_next %}
+      <li><a href="?page={{ photos_to_give.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+
+{% endif %}
+
+    </ul>
+
+
+    <div><a href="{% url 'photologue:database_list' %}" class="btn btn-default">{% trans "Все базы данных" %}</a></div>
+</div>
+
+{% endblock %}
