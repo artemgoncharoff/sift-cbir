@@ -1,18 +1,6 @@
 # Photologue app powered by CBIR library
 
 
-
-
-## Структура проекта
-- `cbir_main` - entrypoint to `cbir`'s commands
-- `cbir` - module providing core class `CBIRCore` to manage indexes.
-- `cbir_evaluation` - scripts for evalution of algortithms of Oxford Paris datasets.
-- `cbir_pretratined` - pretrained weights
-- `cbir_tests` - tests for `cbir` module
-- `project` - django project
-- `photologue` - django project's app
-
-
 ## Установка и настройка виртуального окружения
 ```
 pipenv shell
