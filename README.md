@@ -1,5 +1,3 @@
-# Photologue app powered by CBIR library
-
 
 ## Установка и настройка виртуального окружения
 ```
